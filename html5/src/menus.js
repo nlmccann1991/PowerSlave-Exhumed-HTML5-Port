@@ -183,7 +183,8 @@ export class Menus {
 
     // Game state 8: every line starts 16px below the previous one off the bottom of the
     // screen and rises 0.25px a tick; once the last line is gone it's back to the title.
-    async openCredits() {
+    // onDone runs when the roll ends or is skipped (the endings continue to their screen)
+    async openCredits(onDone = null) {
         const g = this.game;
         if (!this.creditLines) {
             this.toast = { text: 'Loading credits...', ticks: 600 };
@@ -193,20 +194,25 @@ export class Menus {
             if (!this.creditLines) {
                 this.error = 'The credits are read from anubis_Shipping_Galaxy_x64.exe, which wasn\'t found';
                 setTimeout(() => { this.error = null; }, 5000);
+                onDone?.();
                 return;
             }
         }
         const lines = this.creditLines;
         g.sound.playMusic('music/credu1.ogg', false);
+        g.input.consumePressed(); // the key that skipped the ending movie mustn't skip the roll too
         this.push({
             kind: 'credits', items: [], lines,
             ys: lines.map((_, i) => 240 + i * 16),
             cancel: () => this.closeCredits(),
+            onDone,
         });
     }
 
     closeCredits() {
+        const m = this.top;
         this.pop();
+        if (m && m.onDone) { m.onDone(); return; }
         if (this.top && this.top.kind === 'title') this.game.sound.playMusic('music/title.ogg', true);
     }
 
@@ -233,16 +239,19 @@ export class Menus {
         g.state = 'ending';
         this.clear();
         g.sound.stopMusic();
-        g.data.playMovie(good ? 'goodend' : 'badend', g.movieLang()).then(() => {
+        // like the remaster, the ending movie goes into the credits; the port then adds
+        // its own closing screen
+        g.data.playMovie(good ? 'goodend' : 'badend', g.movieLang()).then(() => this.openCredits(() => {
+            g.sound.stopMusic();
             this.push({
                 kind: 'info', title: good ? 'The End' : 'Game Over',
                 lines: good
-                    ? ['Ramses is free and Egypt is saved.', 'Thank you for playing PowerSlave Exhumed.']
-                    : ['You defeated the Kilmaat queen,', 'but the transmitter parts were not all found.', 'Find all eight to see the true ending.'],
+                    ? ['Ramses is free and Egypt is saved.', 'Thank you for playing', 'PowerSlave Exhumed.']
+                    : ['You defeated the Kilmaat queen,', 'but not every transmitter part', 'was found. Find all eight', 'to see the true ending.'],
                 items: [{ label: 'Title Screen', act: () => { this.clear(); g.state = 'title'; this.openTitle(); } }],
                 sel: 0,
             });
-        });
+        }));
     }
 
     // ------------------------------------------------------------------ input
@@ -461,13 +470,16 @@ export class Menus {
         const big = g.bigFont.width(title) <= maxW;
         const titleLines = big ? [title] : this.wrapText(g.smallFont, title, maxW);
         const titleH = big ? 28 : titleLines.length * 12 + 10;
-        const h = titleH + 12 + (m.lines ? m.lines.length * 11 : 0) + m.items.length * 14;
+        // body text (e.g. the ending screens) is drawn at 0.9 scale, wrapped to the box
+        const body = [];
+        for (const l of m.lines || []) body.push(...this.wrapText(g.smallFont, g.strings.t(l), maxW / 0.9));
+        const h = titleH + 12 + (body.length ? body.length * 11 + 6 : 0) + m.items.length * 14;
         const y0 = Math.max(10, 120 - h / 2);
         if (bg.ready && bg.width) d.img(bg, 40, y0 - 8, 240, h + 16, 0, 0, 240 / bg.width, (h + 16) / bg.height, 200, 200, 200, 255);
         titleLines.forEach((l, i) => d.text(l, 160, y0 + i * 12, { center: true, big }));
         let y = y0 + titleH;
-        if (m.lines) {
-            for (const l of m.lines) { d.text(l, 160, y, { center: true, scale: 0.9 }); y += 11; }
+        if (body.length) {
+            for (const l of body) { d.text(l, 160, y, { center: true, scale: 0.9 }); y += 11; }
             y += 6;
         }
         this.drawItems(d, m, 160, y);
