@@ -3,7 +3,9 @@
 A browser (WebGL2 + WebAudio) port of PowerSlave Exhumed. It runs the game's own
 content straight from your copy of the game: maps, textures, sprites, sounds,
 music, definitions and the AngelScript game scripts. No game data is included
-in this folder. A legal digital copy of PowerSlave Exhumed is required. I recommend GOG to get the game legally.
+in this folder. 
+
+A digital copy of PowerSlave Exhumed is required to run this HTML5 port. You can get a DRM-Free and legal copy here: https://www.gog.com/en/game/powerslave_exhumed
 
 ## Running it
 
