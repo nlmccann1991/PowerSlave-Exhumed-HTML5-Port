@@ -1,0 +1,53 @@
+world
+{
+    sunlight_direction  { -0.21 -0.11 0.97 }
+    ambienceColor 33 34 38
+    sunlight_ambientRange 2048.0
+    sunlight_ambienceColor 38 42 67
+    sunlight_color 132 145 226
+    ambientOcclusion 0.7
+}
+
+object
+{
+    type 118
+    index -1
+    radius 3072
+    intensity 2.0
+    falloff 16.0
+    color 255 248 192
+    zOffset 24.0
+}
+
+object
+{
+    type 98
+    index -1
+    radius 3072
+    intensity 2.0
+    falloff 16.0
+    color 255 248 192
+    zOffset 24.0
+}
+
+object
+{
+    type 111
+    index -1
+    radius 3072
+    intensity 2.0
+    falloff 16.0
+    color 255 248 192
+    zOffset 24.0
+}
+
+object
+{
+    type 110
+    index -1
+    radius 3500
+    intensity 2.0
+    falloff 16.0
+    color 255 16 16
+    zOffset 24.0
+}

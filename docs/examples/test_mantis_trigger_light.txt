@@ -1,0 +1,52 @@
+world
+{
+    sunlight_direction  { 0.6194 0.325 0.7145 }
+    ambienceColor 32 32 32
+    sunlight_ambientRange 2048.0
+    sunlight_ambienceColor 64 64 64
+    sunlight_color 224 224 224
+    ambientOcclusion 0.75
+}
+
+surface
+{
+    name "textures/canyon/canyon063.png"
+    color 255 255 255
+    range 512.0
+}
+
+surface
+{
+    name "textures/canyon/canyon064.png"
+    color 255 255 255
+    range 512.0
+}
+
+surface
+{
+    name "textures/magma/magma412.png"
+    color 255 255 255
+    range 512.0
+}
+
+object
+{
+    type 118
+    index -1
+    radius 8192
+    intensity 2.0
+    falloff 32.0
+    color 255 255 255
+    zOffset 24.0
+}
+
+object
+{
+    type 98
+    index -1
+    radius 8192
+    intensity 2.0
+    falloff 32.0
+    color 255 255 255
+    zOffset 24.0
+}

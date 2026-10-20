@@ -1,0 +1,127 @@
+world
+{
+    sunlight_direction  { 0.3 0.5 1.0 }
+    ambienceColor 24 24 24
+    sunlight_ambientRange 2464.0
+    sunlight_ambienceColor 112 112 112
+    sunlight_color 224 224 224
+    ambientOcclusion 0.64
+}
+
+object
+{
+    type 89
+    index -1
+    radius 1024
+    intensity 2.0
+    falloff 14.0
+    color 255 255 255
+}
+
+object
+{
+    type 89
+    index -1
+    radius 6144
+    intensity 1.0
+    falloff 16.0
+    color 128 128 128
+}
+
+object
+{
+    type 122
+    index -1
+    radius 1024
+    intensity 2.0
+    falloff 14.0
+    color 255 255 255
+}
+
+object
+{
+    type 122
+    index -1
+    radius 6144
+    intensity 1.0
+    falloff 16.0
+    color 128 128 128
+}
+
+surface
+{
+    name "textures/colony/colony149.png"
+    color 255 255 255
+    range 1024.0
+}
+
+surface
+{
+    name "textures/colony/colony124.png"
+    color 255 255 255
+    range 128.0
+}
+
+surface
+{
+    name "textures/colony/colony142.png"
+    color 255 255 255
+    range 128.0
+}
+
+surface
+{
+    name "textures/canyon/canyon063.png"
+    color 255 255 255
+    range 512.0
+}
+
+surface
+{
+    name "textures/canyon/canyon064.png"
+    color 255 255 255
+    range 512.0
+}
+
+surface
+{
+    name "textures/misc/forcefield369.png"
+    color 255 255 255
+    range 256.0
+}
+
+light
+{
+    origin { -961 -692 -48 }
+    radius 4096
+    intensity 1.0
+    falloff 12.0
+    color 100 100 100
+}
+
+light
+{
+    origin { -3085 2397 -555 }
+    radius 4096
+    intensity 1.0
+    falloff 12.0
+    color 100 100 100
+}
+
+light
+{
+    origin { -1017 707 -552 }
+    radius 4096
+    intensity 1.0
+    falloff 12.0
+    color 100 100 100
+}
+
+light
+{
+    origin { -934 -3263 343 }
+    radius 6144
+    intensity 1.0
+    falloff 12.0
+    color 100 100 100
+}
