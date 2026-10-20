@@ -15,9 +15,13 @@ ES modules need to be served over HTTP; opening `index.html` from disk won't wor
 
 ```sh
 cd "/path/to/GOG Games/PowerSlave Exhumed"
-python3 -m http.server 8000
+python3 html5/serve.py 8000
 # open http://localhost:8000/html5/
 ```
+
+`serve.py` is `python3 -m http.server` with caching turned off. With the plain
+`http.server`, browsers can keep running old copies of the port's scripts after an
+update; if that happens, reload with Ctrl+Shift+R.
 
 **Option B: host the `html5/` folder anywhere** (any static web server). On first
 launch the page asks you to pick your PowerSlave Exhumed install folder (or just
