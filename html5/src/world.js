@@ -434,6 +434,7 @@ export class World {
     }
 
     fireActorEventFromTag(tag) {
+        if (tag < 0) return; // -1 is "no tag"; untagged actors (e.g. Tomb's lasers) never respond
         let extraDelay = 0;
         const g = this.game;
         for (const ma of this.mapActors) {
@@ -457,6 +458,10 @@ export class World {
                 }
             }
             if (ma.tag + 1 === tag) {
+                if (ma.type === 127) {
+                    for (const a of sec.actors) if (a.mapActor === ma) a.onDeactivate();
+                    continue;
+                }
                 if (!(sec.flags & SF.SPECIAL) || !sec.objectThinker) continue;
                 sec.objectThinker.remove();
             }

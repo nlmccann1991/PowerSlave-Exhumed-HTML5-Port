@@ -394,25 +394,46 @@ export class FireballFactory extends GameObject {
 // solid geometry. params1 holds the state: 0 always on, -1 on (a trigger turns it
 // off for a while), -3 starts off (a trigger turns it on), -4 on (a trigger turns
 // it off for good). params2 is the face the beam fires out of.
+// kexSlaveLaserBeam (vtable 0x140528710): a continuous beam along the emitting face's
+// normal. params1 picks the behaviour: 0 always on; -1 on, a trigger turns it off
+// for a while (the lion switches); -3 off until triggered (traps); -4 on until its
+// tag + 1 fires. params2 is the face.
 export class LaserBeam extends Actor {
     spawn() {
         super.spawn();
         this.flags |= AF.HIDDEN;
-        const p = this.mapActor ? this.mapActor.params1 : 0;
-        this.mode = p;
-        this.on = p !== -3;
-        this.offTime = 0;
+        this.on = null;          // decided on the first tick, once mapActor is attached
+        this.offTimer = 0;
         this.beamStart = null;
         this.beamEnd = null;
+    }
+
+    get mode() { return this.mapActor ? this.mapActor.params1 : 0; }
+
+    // FUN_1401e12b0: starts on for modes 0, -1 and -4, off otherwise
+    initState() {
+        if (this.on === null) this.on = this.mode === 0 || this.mode === -1 || this.mode === -4;
     }
 
     tick() {
         if (this.removing) return;
         if (!this.mapActor) { this.remove(); return; }
         this.gameTicks++;
-        if (this.offTime > 0 && --this.offTime <= 0) {
-            this.on = true;
-            this.playSound('sounds/shockold.wav');
+        const mode = this.mode;
+        this.initState();
+        if (!this.on && mode === -1 && this.offTimer > 0) {
+            // FUN_1401e0d60: 300 counted down by 0.5 a tick, ticking and flashing near the end;
+            // then the beam comes back and the switch that turned it off resets
+            this.offTimer -= 0.5;
+            if (this.offTimer < 100 && (Math.trunc(this.offTimer) & 15) === 0) {
+                this.playSound('sounds/timer.wav');
+                this.game.spawnDynamicLight(this, 128, [1, 1, 1], 24, 4);
+            }
+            if (this.offTimer <= 0) {
+                this.offTimer = 0;
+                this.game.world.resetWallSwitchFromTag(this.mapActor.tag);
+                this.on = true;
+            }
         }
         if (!this.on) { this.beamStart = this.beamEnd = null; return; }
         const g = this.game, cm = g.cmodel;
@@ -431,13 +452,20 @@ export class LaserBeam extends Actor {
         if (hit && (hit.flags & AF.SHOOTABLE) && hit.health > 0) hit.inflictDamage(this, 9999);
     }
 
+    // FUN_1401e1160 (the map actor's tag fired)
     onActivate() {
-        switch (this.mode) {
-        case 0: break;
-        case -1: this.on = false; this.offTime = 300; break;
-        case -3: this.on = true; break;
-        case -4: this.on = false; break;
-        default: this.on = !this.on; break;
-        }
+        this.initState();
+        const mode = this.mode;
+        if (mode === 0) return;
+        if (mode === -1) { this.on = false; this.offTimer = 300; return; }
+        this.on = true;
+    }
+
+    // FUN_1401e1210 (tag + 1 fired)
+    onDeactivate() {
+        this.initState();
+        const mode = this.mode;
+        if (!this.on || mode === 0 || mode === -1) return;
+        this.on = false;
     }
 }
