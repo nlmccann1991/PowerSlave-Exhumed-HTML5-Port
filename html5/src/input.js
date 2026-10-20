@@ -81,6 +81,10 @@ export class Input {
         if (e.repeat && isDown) {
             const a = this.binds[e.code];
             if (a && a.startsWith('menu')) this.pressed.push(a);
+            // Auto-repeat means the key is still held. Some systems (X11/XWayland
+            // autorepeat, Steam overlay focus changes) drop a keyup or clear the held
+            // set mid-press; re-adding here stops W or Space from "letting go" on their own.
+            else if (a) this.down.add(a);
             if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.code)) this.pressed.push(`nav_${e.code}`);
             e.preventDefault();
             return;
