@@ -42,6 +42,8 @@ export class Puppet extends Actor {
         this.oldMovement = new Vec3();
         this.lavaTicks = 0;
         this.slimeTicks = 0;
+        this.jumpBoost = 0;      // from blasts: a held jump is multiplied by (1 + boost)
+        this.concussed = false;
     }
 
     get isPuppet() { return true; }
@@ -188,15 +190,18 @@ export class Puppet extends Actor {
                     else this.playSound(`sounds/pjump0${rand.max(5) + 1}.wav`);
                 }
                 if (this.velocity.z > 0 || this.jumpTicks === 0) {
-                    if (o.artifacts & PA.SANDALS) this.velocity.z = PMOVE_JUMP_BOOST - 0.325 * this.jumpTicks;
-                    else this.velocity.z = PMOVE_SPEED_JUMP - 0.325 * this.jumpTicks;
+                    // a blast under a held jump multiplies it: the bomb jump
+                    const base = (o.artifacts & PA.SANDALS) ? PMOVE_JUMP_BOOST : PMOVE_SPEED_JUMP;
+                    this.velocity.z = (this.jumpBoost + 1) * base - 0.325 * this.jumpTicks;
                     this.jumpTicks++;
                 } else {
                     this.playerFlags |= PF.USERJUMPED;
+                    this.jumpBoost = 0;
                 }
             }
         } else {
             this.playerFlags &= ~PF.JUMPWASHELD;
+            this.jumpBoost = 0;
             if (o.abilities & PAB.VULTURE) {
                 this.playerFlags &= ~(PF.USERJUMPED | PF.JUMPING);
                 this.jumpTicks = 0;
@@ -231,6 +236,7 @@ export class Puppet extends Actor {
             } else {
                 this.playerFlags &= ~PF.FLOATING;
                 this.velocity.z -= this.gravity;
+                if (!(this.playerFlags & PF.USERJUMPED) && this.velocity.z < 0 && this.jumpBoost > 0) this.playerFlags |= PF.USERJUMPED;
             }
         } else {
             this.playerFlags &= ~PF.FLOATING;
@@ -408,6 +414,14 @@ export class Puppet extends Actor {
         if (this.playerFlags & PF.DEAD) { this.deadMove(); this.gameTicks++; return; }
         this.roll = (0 - this.roll) * 0.35 + this.roll;
         if (this.flags & AF.FLASH) { if (this.flashTicks-- <= 0) { this.flashTicks = 0; this.flags &= ~AF.FLASH; } }
+        // FUN_1401d4900: knocked by a blast, the upward speed becomes a jump boost and
+        // the jump can be held again; hovering with the Feather doubles the lift
+        if (this.concussed) {
+            this.concussed = false;
+            this.jumpBoost = Math.max(0, this.velocity.z * 0.0625);
+            this.playerFlags &= ~PF.USERJUMPED;
+            if (this.velocity.z > 0 && (this.playerFlags & PF.FLOATING)) this.velocity.z *= 2;
+        }
         if (this.owner.lockTime > 0 && !((this.playerFlags & PF.STUNNED) && this.origin.z > this.floorHeight)) return;
         if (this.playerFlags & (PF.NOCLIP | PF.FLY)) this.flyMove(cmd);
         else if (this.flags & AF.INWATER) this.waterMove(cmd);

@@ -669,6 +669,7 @@ export class World {
                     actor.velocity.x += k * 0.25 * d.x / len;
                     actor.velocity.y += k * 0.25 * d.y / len;
                     actor.velocity.z = Math.min(actor.velocity.z, 0) + k * 0.1575 * d.z / len;
+                    actor.concussed = true; // flag 0x400000: the player turns this into a jump boost
                 }
             }
             for (let i = sector.faceStart; i < sector.faceEnd + 3; ++i) {
