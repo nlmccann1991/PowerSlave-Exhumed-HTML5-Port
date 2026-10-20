@@ -5,7 +5,7 @@ content straight from your copy of the game: maps, textures, sprites, sounds,
 music, definitions and the AngelScript game scripts. No game data is included
 in this folder.
 
-## Running it
+## Setup and Game Launch
 
 ES modules need to be served over HTTP; opening `index.html` from disk won't work.
 
