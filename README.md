@@ -93,8 +93,7 @@ Progress, checkpoints and settings are saved in the browser's `localStorage`.
 | `src/hud.js`, `src/menus.js` | Status bar, title, overworld, pause and inventory screens |
 
 The engine follows the GPL PowerslaveEX source by Samuel Villarreal, which the
-KEX remaster grew out of. Behaviour specific to Exhumed was recovered with REA
-(reverse-engineer-anything) and Ghidra from `anubis_Shipping_Galaxy_x64.exe`:
+KEX remaster grew out of. Behaviour specific to Exhumed was recovered with Ghidra from `anubis_Shipping_Galaxy_x64.exe`:
 
 - the AngelScript API registration strings (method names and types),
 - the map-actor spawn path, including the per-difficulty monster filter in `params1`,
