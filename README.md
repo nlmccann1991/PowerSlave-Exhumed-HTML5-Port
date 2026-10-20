@@ -5,7 +5,7 @@ content straight from your copy of the game: maps, textures, sprites, sounds,
 music, definitions and the AngelScript game scripts. No game data is included
 in this folder. 
 
-A digital copy of PowerSlave Exhumed is required to run this HTML5 port. You can get a DRM-Free and legal copy here: https://www.gog.com/en/game/powerslave_exhumed
+A PC copy of PowerSlave Exhumed is required to run this HTML5 port. You can get a DRM-Free and legal copy here: https://www.gog.com/en/game/powerslave_exhumed
 
 ## Running it
 
