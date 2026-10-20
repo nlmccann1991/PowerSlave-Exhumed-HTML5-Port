@@ -7,7 +7,7 @@ in this folder.
 
 A PC copy of PowerSlave Exhumed is required to run this HTML5 port. You can get a DRM-Free and legal copy here: https://www.gog.com/en/game/powerslave_exhumed
 
-## Running it
+## Setup and Launching
 
 ES modules need to be served over HTTP; opening `index.html` from disk won't work.
 
