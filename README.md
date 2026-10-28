@@ -1,5 +1,7 @@
 # PowerSlave Exhumed — HTML5 port
 
+<img width="480" height="270" alt="powerslave" src="https://github.com/user-attachments/assets/fd87936b-7c7b-4476-9387-31de9be36b1f" />
+
 A browser (WebGL2 + WebAudio) port of PowerSlave Exhumed. It runs the game's own
 content straight from your copy of the game: maps, textures, sprites, sounds,
 music, definitions and the AngelScript game scripts. No game data is included
